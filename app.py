@@ -20,7 +20,7 @@ mail = Mail()
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
-    app.config['SECRET_KEY'] = 'your_secret_key_here'
+    app.config['SECRET_KEY'] = my_super_secret_key_12345'
 
     app.config.update(
         MAIL_SERVER='smtp.gmail.com',
