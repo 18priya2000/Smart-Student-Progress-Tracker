@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Create New Test - School System{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-dark text-white py-3">
+                    <h5 class="mb-0 text-center"><i class="bi bi-journal-plus me-2"></i> Create New Test Instance</h5>
+                </div>
+                
+                <div class="card-body p-4">
+                    <form method="post">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-muted small uppercase">Test Name / Title</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-file-earmark-text"></i></span>
+                                <input type="text" name="test_name" class="form-control" placeholder="e.g. Unit Test 1 or Final Exam" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-muted small uppercase">Exam Date</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-calendar-event"></i></span>
+                                <input type="date" name="test_date" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+    <label class="form-label fw-bold text-muted small uppercase">Assign to Subject</label>
+    <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-book"></i></span>
+        <select name="subject_id" class="form-select" required>
+            {% for subject in subjects %}
+                <option value="{{ subject.id }}" 
+                    {% if subject.teacher_id == current_user.id %} selected {% endif %}>
+                    {{ subject.subject_name }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg shadow-sm">
+                                <i class="bi bi-check-circle-fill me-2"></i> Create Test
+                            </button>
+                            <a href="/marks" class="btn btn-link text-decoration-none text-muted">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            
+        </div>
+    </div>
+</div>
+{% endblock %}

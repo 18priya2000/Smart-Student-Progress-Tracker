@@ -1,0 +1,58 @@
+{% extends "base_parent.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-3">
+        <div class="card bg-primary text-white text-center p-3 mb-3">
+            <h3>{{ avg_marks }}%</h3>
+            <p>Average Score</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-danger text-white text-center p-3 mb-3">
+            <h3>{{ failed }}</h3>
+            <p>Failed Tests</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-warning text-dark text-center p-3 mb-3">
+            <h3>{{ absent }}</h3>
+            <p>Total Absents</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <a href="{{ url_for('chapter_performance') }}" class="btn btn-dark w-100 py-4 shadow">
+            <i class="bi bi-journal-text"></i><br>Chapter Performance
+        </a>
+    </div>
+</div>
+
+<div class="card shadow mt-4">
+    <div class="card-body">
+        <h5 class="card-title">Test Performance Trend</h5>
+        <div style="height: 300px;">
+            <canvas id="parentChart"></canvas>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    new Chart(document.getElementById('parentChart'), {
+        type: 'line',
+        data: {
+            labels: {{ labels|tojson }},
+            datasets: [{
+                label: 'Test Marks',
+                data: {{ scores|tojson }},
+                borderColor: '#0d6efd',
+                tension: 0.3,
+                fill: true
+            }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+
+{% block title %}Analysis: {{ student.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="display-5">Analysis for <strong>{{ student.name }}</strong></h1>
+            <p class="text-muted">Roll No: {{ student.id }} 
+        </div>
+        <button class="btn btn-outline-primary" onclick="window.print()">Download Report</button>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-6">
+            <div class="card h-100 shadow-sm border-0 bg-primary text-white">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Predicted Final Score</h5>
+                    <div class="display-3 fw-bold">{{ prediction }}%</div>
+                    <p class="card-text"> Prediction based on current trend</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100 shadow-sm border-0" style="background-color: #669cc8;">
+                <div class="card-body">
+                    <h5 class="card-title">Syllabus Insights</h5>
+                    <hr>
+                    <div class="d-flex justify-content-around mt-3">
+                        <div class="text-center">
+                            <span class="badge  p-2">Average</span>
+                            <h4 class="mt-2 text-dark">{{ average }}</h4>
+                        </div>
+                        <div class="text-center">
+                            <span class="badge p-2">Weak Area</span>
+                            <h4 class="mt-2 text-dark">{{ weak }}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <h5 class="card-title mb-4"><i class="bi bi-graph-up"></i> Past Performance Trend</h5>
+            <div style="height: 400px; width: 100%;">
+                <canvas id="performanceChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0 mb-5">
+    <div class="card-body p-0">
+        <div class="p-3 bg-light border-bottom">
+            <h5 class="card-title mb-0">Chapter-wise Preparation Status</h5>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th class="ps-4">Chapter</th>
+                        <th class="text-center">Set Status</th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    <form method="POST" action="{{ url_for('save_progress') }}">
+    <input type="hidden" name="student_id" value="{{ student.id }}">
+    
+    <table class="table table-hover align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Chapter Name</th>
+                <th class="text-center">Set Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ch in syllabus %}
+            <tr>
+                <td><strong>Ch {{ ch.ch_no }}:</strong> {{ ch.ch_name }}</td>
+                <td class="text-center">
+                    {% set saved_val = status_map.get(ch.id, "") %}
+                    
+                    <div class="btn-group" role="group">
+                        <input type="radio" class="btn-check" name="status_{{ch.id}}" id="best_{{ch.id}}" value="Best" 
+                               {% if saved_val == 'Best' %}checked{% endif %}>
+                        <label class="btn btn-outline-success btn-sm" for="best_{{ch.id}}">Best</label>
+
+                        <input type="radio" class="btn-check" name="status_{{ch.id}}" id="avg_{{ch.id}}" value="Average" 
+                               {% if saved_val == 'Average' %}checked{% endif %}>
+                        <label class="btn btn-outline-warning btn-sm" for="avg_{{ch.id}}">Average</label>
+
+                        <input type="radio" class="btn-check" name="status_{{ch.id}}" id="weak_{{ch.id}}" value="Weak" 
+                               {% if saved_val == 'Weak' %}checked{% endif %}>
+                        <label class="btn btn-outline-danger btn-sm" for="weak_{{ch.id}}">Weak</label>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <div class="text-end p-3">
+        <button type="submit" class="btn btn-primary px-5 shadow-sm">Update Selection</button>
+    </div>
+</form>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const canvas = document.getElementById('performanceChart');
+        
+        if (!canvas) {
+            console.error("Bhai, HTML mein 'performanceChart' ID wala canvas nahi mila!");
+            return;
+        }
+
+        const ctx = canvas.getContext('2d');
+
+        // Python (Jinja) se data nikalna
+        // Dhyan rakhein: 'm.marks' wahi naam hona chahiye jo aapke Models mein hai
+        const labels = [{% for m in marks %}"{{ m.test_name }}",{% endfor %}];
+        const marksData = [{% for m in marks %}{{ m.marks if m.marks else 0 }},{% endfor %}];
+
+        console.log("Labels found:", labels);
+        console.log("Data found:", marksData);
+
+        if (marksData.length === 0) {
+            console.warn("No marks data found for this student.");
+            // Canvas par message dikhane ke liye
+            ctx.font = "20px sans-serif";
+            ctx.textAlign = "center";
+            ctx.fillText("No test data available yet.", canvas.width/2, canvas.height/2);
+            return;
+        }
+
+        // Purane chart ko destroy karne ki safety (agar koi bacha ho)
+        let existingChart = Chart.getChart("performanceChart");
+        if (existingChart) {
+            existingChart.destroy();
+        }
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Performance Trend',
+                    data: marksData,
+                    borderColor: '#0d6efd',
+                    backgroundColor: 'rgba(13, 110, 253, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 6,
+                    pointBackgroundColor: '#0d6efd',
+                    pointHoverRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: { stepSize: 20 },
+                        grid: { color: '#f0f0f0' }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}
+ 

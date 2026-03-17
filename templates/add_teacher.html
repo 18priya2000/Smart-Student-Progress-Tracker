@@ -1,0 +1,60 @@
+{% extends "admin_panel.html" %}
+
+{% block title %}Add Teacher{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-dark text-white text-center">
+                    <h4 class="mb-0">👨‍🏫 Register New Teacher</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form action="/add-teacher" method="POST">
+                        
+                        <div class="mb-3">
+                            <label class="form-label font-weight-bold">Username</label>
+                            <input type="text" name="username" class="form-control" placeholder="e.g. aslam_sir" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" name="email" class="form-control" placeholder="teacher@school.com" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Password</label>
+                            <input type="password" name="password" class="form-control" placeholder="Set a strong password" required>
+                        </div>
+
+                        <hr>
+
+                        <div class="mb-3">
+                            <label class="form-label text-primary font-weight-bold">Subject Name</label>
+                            <input type="text" name="subject_name" class="form-control" placeholder="e.g. Mathematics" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label text-primary font-weight-bold">Assign to Class</label>
+                            <select name="class_id" class="form-select" required>
+                                <option value="" disabled selected>-- Select Class --</option>
+                                {% for c in classes %}
+                                    <option value="{{ c.id }}">{{ c.class_name }}</option>
+                                {% endfor %}
+                            </select>
+                            <small class="text-muted">Is teacher ko isi class ke students dashboard par dikhenge.</small>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary">Add Teacher & Subject</button>
+                            <a href="{{ url_for('admin_panel') }}" class="btn btn-light">Cancel</a>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

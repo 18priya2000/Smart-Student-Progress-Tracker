@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Add New Chapter - Syllabus Management{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-dark text-white py-3">
+                    <h5 class="mb-0 text-center"><i class="bi bi-journal-plus me-2"></i> Add New Chapter</h5>
+                </div>
+                
+                <div class="card-body p-4">
+                    <form action="/add_syllabus" method="POST">
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Chapter Number</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-hash"></i></span>
+                                <input type="number" name="ch_no" class="form-control" placeholder="e.g. 1, 2, 3" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Chapter Name</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-card-text"></i></span>
+                                <input type="text" name="ch_name" class="form-control" placeholder="e.g. Introduction to Python" required>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg shadow-sm">
+                                <i class="bi bi-save me-2"></i> Save Chapter
+                            </button>
+                            <a href="/dashboard" class="btn btn-outline-secondary">Cancel & Back</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="mt-4 text-center">
+                <p class="text-muted small">
+                    <i class="bi bi-info-circle"></i> Once added, this chapter will appear in the <strong>Syllabus Progress Matrix</strong> for all students.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,14 @@
+import os
+
+class Config:
+    SECRET_KEY = 'aapka_secret_key_yahan'
+    # Database ka rasta
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///site.db'
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    
+    # Mail settings (agar use kar rahe hain)
+    MAIL_SERVER = 'smtp.gmail.com'
+    MAIL_PORT = 587
+    MAIL_USE_TLS = True
+    MAIL_USERNAME = os.environ.get('EMAIL_USER')
+    MAIL_PASSWORD = os.environ.get('EMAIL_PASS')

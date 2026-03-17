@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Send Notifications - School System{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow border-0">
+                <div class="card-header bg-primary text-white py-3">
+                    <h4 class="mb-0"><i class="bi bi-envelope-paper-fill me-2"></i> Send Mail to Parents</h4>
+                </div>
+                
+                <div class="card-body p-4">
+                    <form method="POST">
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Subject / Title</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="bi bi-type-h1"></i></span>
+                                <input type="text" name="subject" class="form-control" placeholder="e.g. Monthly Progress Report" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Your Message</label>
+                            <textarea name="message" class="form-control" rows="6" placeholder="Write your message here..." required></textarea>
+                            <div class="form-text text-muted">Use professional language as this will be sent directly to parents.</div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Recipient Group</label>
+                                <select name="recipient_type" id="recipient_type" class="form-select" onchange="toggleDropdown()">
+                                    <option value="all">📢 All Parents (Broadcast)</option>
+                                    <option value="specific">👤 Specific Parent</option>
+                                </select>
+                            </div>
+
+                            <div id="specific_dropdown" class="col-md-6" style="display:none;">
+                                <label class="form-label fw-bold">Select Student/Parent</label>
+                                <select name="specific_parent" class="form-select">
+                                    <option value="">-- Search Student --</option>
+                                    {% for s in students %}
+                                        <option value="{{ s.parent_email }}">{{ s.username }} ({{ s.parent_email }})</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex justify-content-between">
+                            <button type="reset" class="btn btn-outline-secondary px-4">Clear Form</button>
+                            <button type="submit" class="btn btn-primary px-5 shadow-sm">
+                                <i class="bi bi-send-fill me-2"></i> Send Mail Now
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleDropdown() {
+    const type = document.getElementById("recipient_type").value;
+    const dropdown = document.getElementById("specific_dropdown");
+    
+    // Bootstrap dynamic display (block vs none)
+    if (type === "specific") {
+        dropdown.style.display = "block";
+        dropdown.classList.add("animate__animated", "animate__fadeIn"); // Optional: adds a nice fade effect
+    } else {
+        dropdown.style.display = "none";
+    }
+}
+</script>
+{% endblock %}

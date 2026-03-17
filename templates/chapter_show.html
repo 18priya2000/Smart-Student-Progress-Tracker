@@ -1,0 +1,43 @@
+{% extends "base_parent.html" %}
+{% block content %}
+<h3 class="mb-4">Subject-wise Chapter Performance</h3>
+<div class="row">
+    {% for sub in subjects %}
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-header bg-white fw-bold d-flex justify-content-between">
+                <span>{{ sub.subject_name }}</span>
+                <span class="badge bg-secondary">Class ID: {{ sub.class_id }}</span>
+            </div>
+            <div class="card-body">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Ch No.</th>
+                            <th>Chapter Name</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ch, prog in progress if ch.subject_id == sub.id %}
+                        <tr>
+                            <td>{{ ch.ch_no }}</td>
+                            <td>{{ ch.ch_name }}</td>
+                            <td>
+                                <span class="badge 
+                                    {% if prog.status == 'Best' %}bg-success
+                                    {% elif prog.status == 'Average' %}bg-warning
+                                    {% else %}bg-danger{% endif %}">
+                                    {{ prog.status }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

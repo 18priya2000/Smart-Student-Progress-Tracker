@@ -1,0 +1,54 @@
+{% extends "admin_panel.html" %}
+
+{% block title %}Add New Student{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title mb-0">Add New Student</h3>
+                </div>
+                <div class="card-body">
+                    <form action="/add-student" method="POST">
+    
+    <form action="/add-student" method="POST">
+    <div class="mb-3">
+        <label class="form-label">Student Full Name</label>
+        <input type="text" name="student_name" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Roll Number</label>
+        <input type="text" name="roll_no" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Parent Email</label>
+        <input type="email" name="parent_email" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Set Parent Password</label>
+        <input type="password" name="parent_password" class="form-control" placeholder="Parent isi se login karega" required>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Assign to Class</label>
+        <select name="class_id" class="form-select" required>
+            {% for c in classes %}
+                <option value="{{ c.id }}">{{ c.class_name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-success">Save Student & Parent</button>
+</form>
+</form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

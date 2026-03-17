@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Attendance{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-info text-white py-3">
+                    <h5 class="mb-0"><i class="bi bi-pencil-square me-2"></i> Update Attendance Record</h5>
+                </div>
+                
+                <div class="card-body p-4">
+                    <div class="alert alert-light border mb-4">
+                        <p class="mb-1 text-muted small uppercase fw-bold">Modifying Record For:</p>
+                        <h5 class="text-dark mb-0">{{ student_name if student_name else "Selected Student" }}</h5>
+                        <small class="text-primary"><i class="bi bi-calendar3 me-1"></i> Date: {{ date if date else "Selected Date" }}</small>
+                    </div>
+
+                    <form method="POST">
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Current Status</label>
+                            <select name="status" class="form-select form-select-lg shadow-sm border-2">
+                                <option value="Present" {% if current_status == 'Present' %}selected{% endif %}>✅ Present</option>
+                                <option value="Absent" {% if current_status == 'Absent' %}selected{% endif %}>❌ Absent</option>
+                                <option value="Late" {% if current_status == 'Late' %}selected{% endif %}>🕒 Late</option>
+                            </select>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg shadow">
+                                <i class="bi bi-arrow-repeat me-2"></i> Update Attendance
+                            </button>
+                            <a href="/attendance" class="btn btn-link text-decoration-none text-muted mt-2">
+                                <i class="bi bi-arrow-left"></i> Go Back to Attendance List
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="mt-4 p-3 bg-light rounded text-center">
+                <p class="small text-muted mb-0">
+                    <i class="bi bi-info-circle"></i> Note: Updating this will reflect in the student's final analysis report immediately.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-select-lg {
+        border-color: #0dcaf0;
+    }
+    .form-select-lg:focus {
+        border-color: #0bb5d8;
+        box-shadow: 0 0 0 0.25rem rgba(13, 202, 240, 0.25);
+    }
+</style>
+{% endblock %}

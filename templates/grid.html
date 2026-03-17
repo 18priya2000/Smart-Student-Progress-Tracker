@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Syllabus Tracking Matrix{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-dark text-white py-3 d-flex justify-content-between align-items-center">
+            <h4 class="mb-0"><i class="bi bi-grid-3x3-gap-fill me-2"></i> Syllabus Progress Matrix</h4>
+            
+        </div>
+        
+        <div class="card-body">
+            <p class="text-muted small mb-4">
+                <i class="bi bi-info-circle"></i> Tip: Use this grid to mark the preparation level of each student per chapter.
+            </p>
+
+            <form action="/save_progress" method="POST">
+                <div class="table-responsive" style="max-height: 70vh; overflow-y: auto;">
+                    <table class="table table-bordered table-hover align-middle">
+                        <thead class="table-light sticky-top" style="z-index: 10;">
+                            <tr>
+                                <th class="bg-light sticky-col" style="min-width: 200px; position: sticky; left: 0; z-index: 11;">Students</th>
+                                {% for chapter in chapters %}
+                                    <th class="text-center" style="min-width: 150px;">{{ chapter.ch_name }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in students %}
+                            <tr>
+                                <td class="fw-bold bg-light sticky-col" style="position: sticky; left: 0; z-index: 5;">
+                                    {{ student.name }}
+                                </td>
+                                {% for chapter in chapters %}
+                                    <td>
+    {# Create a key to look up in the dictionary #}
+    {% set current_status = progress_map.get((student.id, chapter.id)) %}
+    
+    <select name="status_{{ student.id }}_{{ chapter.id }}" 
+            class="form-select form-select-sm status-select">
+        
+        <option value="Pending" {% if not current_status or current_status == 'Pending' %}selected{% endif %}>⚪ Pending</option>
+        <option value="Best" {% if current_status == 'Best' %}selected{% endif %}>🟢 Best</option>
+        <option value="Average" {% if current_status == 'Average' %}selected{% endif %}>🟡 Average</option>
+        <option value="Weak" {% if current_status == 'Weak' %}selected{% endif %}>🔴 Weak</option>
+        
+        
+    </select>
+</td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="text-center mt-4 mb-3">
+                    <button type="submit" class="btn btn-primary btn-lg px-5 shadow-sm">
+                        <i class="bi bi-cloud-arrow-up-fill me-2"></i> Save All Progress
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Sticky Column Styling for Student Names */
+    .sticky-col {
+        box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+    }
+</style>
+
+{% endblock %}    

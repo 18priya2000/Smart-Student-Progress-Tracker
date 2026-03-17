@@ -1,0 +1,27 @@
+{% extends "base_parent.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-body">
+                <h4>Contact Subject Teacher</h4>
+                <form method="POST">
+                    <div class="mb-3">
+                        <label>Select Teacher</label>
+                        <select name="teacher_email" class="form-select" required>
+                            {% for teacher in teachers %}
+                                <option value="{{ teacher.email }}">{{ teacher.username }} ({{ teacher.email }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label>Message</label>
+                        <textarea name="message" class="form-control" rows="4" placeholder="Write your concern..."></textarea>
+                    </div>
+                    <button class="btn btn-primary w-100">Send Mail</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}Parent Portal{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('parent_dashboard') }}">🎓 Parent Portal</a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="{{ url_for('parent_dashboard') }}">Dashboard</a>
+                <a class="nav-link" href="{{ url_for('show_marks') }}">Marks</a>
+                <a class="nav-link" href="{{ url_for('parent_attendance') }}">Attendance</a>
+                <a class="nav-link" href="{{ url_for('apply_leave') }}">Leave</a>
+                <a class="nav-link" href="{{ url_for('parent_mail') }}">Contact Teachers</a>
+                <a class="nav-link text-danger" href="{{ url_for('logout') }}">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        {% block content %}{% endblock %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

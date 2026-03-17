@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Marks - School System{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white py-3">
+            <h4 class="mb-0 text-primary"><i class="bi bi-pencil-square"></i> Student Marks Management</h4>
+        </div>
+        <div class="card-body">
+            <form method="get" class="row g-3 align-items-end">
+    <div class="col-md-5">
+        <label class="form-label fw-bold">Your Subject</label>
+        <select class="form-select" disabled>
+            <option value="{{ subject.id }}" selected>
+                {{ subject.subject_name }}
+            </option>
+        </select>
+        <input type="hidden" name="subject_id" value="{{ subject.id }}">
+    </div>
+
+    <div class="col-md-5">
+        <label class="form-label fw-bold">Select Test</label>
+        <select name="test_id" class="form-select" onchange="this.form.submit()">
+            <option value="">Choose Test...</option>
+            {% for test in tests %}
+            <option value="{{ test.id }}" {% if test.id|string == test_id %}selected{% endif %}>
+                {{ test.test_name }} ({{ test.test_date }})
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="col-md-2">
+        <a href="/add-test" class="btn btn-outline-primary w-100">
+            <i class="bi bi-plus-circle"></i> Add Test
+        </a>
+    </div>
+</form>
+        </div>
+    </div>
+
+    {% if students %}
+    <div class="card shadow-sm border-0">
+        <form method="post">
+            <input type="hidden" name="test_id" value="{{test_id}}">
+            <input type="hidden" name="subject_id" value="{{subject_id}}"> <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th class="ps-4" style="width: 60%;">Student Name</th>
+                            <th class="text-center" style="width: 40%;">Marks (out of 100)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                        <tr>
+                            <td class="ps-4">
+                                <div class="fw-bold">{{ student.name }}</div>
+                                <small class="text-muted">ID: {{ student.id }}</small>
+                            </td>
+                            <td class="px-4">
+                                <div class="input-group">
+                                    <input type="number" 
+                                           name="marks_{{student.id}}" 
+                                           class="form-control text-center fw-bold" 
+                                           placeholder="--"
+                                           min="0" max="100"
+                                           value="{{marks_map.get(student.id, '')}}">
+                                    <span class="input-group-text">/ 100</span>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card-footer bg-white py-3 text-end">
+                <button type="submit" class="btn btn-success btn-lg px-5 shadow-sm">
+                    <i class="bi bi-check2-circle"></i> Save Marks
+                </button>
+            </div>
+        </form>
+    </div>
+    {% elif subject_id and test_id %}
+    <div class="alert alert-warning text-center mt-3">
+        No students found in this class.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

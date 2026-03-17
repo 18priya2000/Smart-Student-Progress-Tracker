@@ -1,0 +1,87 @@
+{% extends "base_parent.html" %}
+
+{% block title %}Apply for Leave{% endblock %}
+
+{% block content %}
+<div class="container mt-5 pb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-header bg-primary text-white text-center py-4 rounded-top-4">
+                    <i class="bi bi-envelope-paper-fill display-4 mb-2"></i>
+                    <h3 class="fw-bold mb-0">Leave Application</h3>
+                    <div class="mt-2">
+                        <span class="badge bg-light text-primary px-3 py-2 rounded-pill">
+                            <i class="bi bi-person-fill me-1"></i> {{ student.name }}
+                        </span>
+                        <span class="badge bg-info text-white px-3 py-2 rounded-pill">
+                            <i class="bi bi-mortarboard-fill me-1"></i> {{ student.student_class.class_name }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="card-body p-4 p-md-5">
+                    <form method="POST">
+                        <input type="hidden" name="student_id" value="{{ student.id }}">
+                        <div class="form-floating mb-3">
+                            <input type="date" class="form-control" id="leave_date" name="date" required>
+                            <label for="leave_date">Date of Absence</label>
+                        </div>
+                        <div class="form-floating mb-4">
+                            <textarea class="form-control" id="reason" name="reason" placeholder="Reason" style="height: 120px" required></textarea>
+                            <label for="reason">Reason for Leave</label>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-pill shadow-sm">Submit Application</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-10 col-lg-8 mt-5">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0 fw-bold"><i class="bi bi-clock-history me-2"></i> History & Status</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="ps-4">Date</th>
+                                    <th>Reason</th>
+                                    <th class="text-center">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if leaves %}
+                                    {% for l in leaves %}
+                                    <tr>
+                                        <td class="ps-4">{{ l.date }}</td>
+                                        <td class="text-muted small">{{ l.reason }}</td>
+                                        <td class="text-center">
+                                            {% if l.status == 'Approved' %}
+                                                <span class="badge bg-success rounded-pill px-3">Accepted</span>
+                                            {% elif l.status == 'Rejected' %}
+                                                <span class="badge bg-danger rounded-pill px-3">Rejected</span>
+                                            {% else %}
+                                                <span class="badge bg-warning text-dark rounded-pill px-3">Pending</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td colspan="3" class="text-center py-4 text-muted">No applications yet.</td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
